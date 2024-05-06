@@ -25,7 +25,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostByPostId(@PathVariable Long postId) {
+    public ResponseEntity<Post> getPostByPostId(@PathVariable("postId") Long postId) {
         Optional<Post> matchingPost = postService.getPostByPostId(postId);
         return matchingPost.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -38,13 +38,13 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody PostPatchRequestBody postPatchRequestBody) {
+    public ResponseEntity<Post> updatePost(@PathVariable("postId") Long postId, @RequestBody PostPatchRequestBody postPatchRequestBody) {
         var post = postService.updatePost(postId, postPatchRequestBody);
         return ResponseEntity.ok(post);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+    public ResponseEntity<Void> deletePost(@PathVariable("postId") Long postId) {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
