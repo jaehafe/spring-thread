@@ -4,7 +4,6 @@ import com.spring.board.model.Post;
 import com.spring.board.model.PostPatchRequestBody;
 import com.spring.board.model.PostPostRequestBody;
 import com.spring.board.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +14,11 @@ import java.util.Optional;
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Post>> getPosts() {

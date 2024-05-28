@@ -14,8 +14,12 @@ spring:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/board
-    username: leejaeha
+    username: jaeha
     password: 123456789
+  security:
+    user.name: board-admin
+    user.password: 123456789
+
 #  logging:
 #    level:
 #      org.hibernate.type: TRACE
