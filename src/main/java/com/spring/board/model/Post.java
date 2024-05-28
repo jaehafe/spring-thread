@@ -7,11 +7,13 @@ public class Post {
     private Long postId;
     private String body;
     private ZonedDateTime createdDateTime;
+    private ZonedDateTime updatedDateTime;
 
-    public Post(Long postId, String body, ZonedDateTime createdDateTime) {
+    public Post(Long postId, String body, ZonedDateTime createdDateTime, ZonedDateTime updatedDateTime) {
         this.postId = postId;
         this.body = body;
         this.createdDateTime = createdDateTime;
+        this.updatedDateTime = updatedDateTime;
     }
 
     public Long getPostId() {
@@ -36,6 +38,14 @@ public class Post {
 
     public void setCreatedDateTime(ZonedDateTime createdDateTime) {
         this.createdDateTime = createdDateTime;
+    }
+
+    public ZonedDateTime getUpdatedDateTime() {
+        return updatedDateTime;
+    }
+
+    public void setUpdatedDateTime(ZonedDateTime updatedDateTime) {
+        this.updatedDateTime = updatedDateTime;
     }
 
     @Override

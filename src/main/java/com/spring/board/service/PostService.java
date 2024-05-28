@@ -19,9 +19,9 @@ public class PostService {
     private static final List<Post> posts = new ArrayList<>();
 
     static {
-        posts.add(new Post(1L, "Post 1",ZonedDateTime.now()));
-        posts.add(new Post(2L, "Post 2", ZonedDateTime.now()));
-        posts.add(new Post(3L, "Post 3", ZonedDateTime.now()));
+        posts.add(new Post(1L, "Post 1", ZonedDateTime.now(), ZonedDateTime.now()));
+        posts.add(new Post(2L, "Post 2", ZonedDateTime.now(), ZonedDateTime.now()));
+        posts.add(new Post(3L, "Post 3", ZonedDateTime.now(), ZonedDateTime.now()));
     }
 
     public List<Post> getPosts() {
@@ -35,7 +35,7 @@ public class PostService {
     public Post createPost(PostPostRequestBody postPostRequestBody) {
         var newPostId = posts.stream().mapToLong(Post::getPostId).max().orElse(0L) + 1;
 
-        var newPost = new Post(newPostId, postPostRequestBody.body(), ZonedDateTime.now());
+        var newPost = new Post(newPostId, postPostRequestBody.body(), ZonedDateTime.now(), ZonedDateTime.now());
         posts.add(newPost);
 
         return newPost;
