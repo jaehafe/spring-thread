@@ -10,6 +10,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "post")
 @SQLDelete(sql = "UPDATE \"post\" SET deleteddatetime = CURRENT_TIMESTAMP WHERE postid = ?")
+// Deprecated in Hibernate 6.3
+// @Where(clause = "deletedDateTime IS NULL")
 @SQLRestriction("deleteddatetime IS NULL")
 public class PostEntity {
     @Id
@@ -19,14 +21,13 @@ public class PostEntity {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @Column
-    private ZonedDateTime createdDateTIme;
+    @Column private ZonedDateTime createdDateTime;
 
-    @Column
-    private ZonedDateTime updatedDateTIme;
+    @Column private ZonedDateTime updatedDateTime;
 
-    @Column
-    private ZonedDateTime deletedDateTIme;
+    @Column private ZonedDateTime deletedDateTime;
+
+    public PostEntity() {}
 
     public Long getPostId() {
         return postId;
@@ -44,40 +45,55 @@ public class PostEntity {
         this.body = body;
     }
 
-    public ZonedDateTime getCreatedDateTIme() {
-        return createdDateTIme;
+    public ZonedDateTime getCreatedDateTime() {
+        return createdDateTime;
     }
 
-    public void setCreatedDateTIme(ZonedDateTime createdDateTIme) {
-        this.createdDateTIme = createdDateTIme;
+    public void setCreatedDateTime(ZonedDateTime createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 
-    public ZonedDateTime getUpdatedDateTIme() {
-        return updatedDateTIme;
+    public ZonedDateTime getUpdatedDateTime() {
+        return updatedDateTime;
     }
 
-    public void setUpdatedDateTIme(ZonedDateTime updatedDateTIme) {
-        this.updatedDateTIme = updatedDateTIme;
+    public void setUpdatedDateTime(ZonedDateTime updatedDateTime) {
+        this.updatedDateTime = updatedDateTime;
     }
 
-    public ZonedDateTime getDeletedDateTIme() {
-        return deletedDateTIme;
+    public ZonedDateTime getDeletedDateTime() {
+        return deletedDateTime;
     }
 
-    public void setDeletedDateTIme(ZonedDateTime deletedDateTIme) {
-        this.deletedDateTIme = deletedDateTIme;
+    public void setDeletedDateTime(ZonedDateTime deletedDateTime) {
+        this.deletedDateTime = deletedDateTime;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PostEntity that = (PostEntity) o;
-        return Objects.equals(postId, that.postId) && Objects.equals(body, that.body) && Objects.equals(createdDateTIme, that.createdDateTIme) && Objects.equals(updatedDateTIme, that.updatedDateTIme) && Objects.equals(deletedDateTIme, that.deletedDateTIme);
+        if (!(o instanceof PostEntity that)) return false;
+        return Objects.equals(getPostId(), that.getPostId())
+                && Objects.equals(getBody(), that.getBody())
+                && Objects.equals(getCreatedDateTime(), that.getCreatedDateTime())
+                && Objects.equals(getUpdatedDateTime(), that.getUpdatedDateTime())
+                && Objects.equals(getDeletedDateTime(), that.getDeletedDateTime());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(postId, body, createdDateTIme, updatedDateTIme, deletedDateTIme);
+        return Objects.hash(
+                getPostId(), getBody(), getCreatedDateTime(), getUpdatedDateTime(), getDeletedDateTime());
+    }
+
+    @PrePersist
+    private void prePersist() {
+        this.createdDateTime = ZonedDateTime.now();
+        this.updatedDateTime = this.createdDateTime;
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        this.updatedDateTime = ZonedDateTime.now();
     }
 }

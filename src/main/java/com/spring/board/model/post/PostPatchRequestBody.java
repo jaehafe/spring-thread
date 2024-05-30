@@ -1,3 +1,3 @@
-package com.spring.board.model;
+package com.spring.board.model.post;
 
 public record PostPatchRequestBody(String body) {}
