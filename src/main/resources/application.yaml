@@ -14,7 +14,7 @@ spring:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/board
-    username: jaeha
+    username: leejaeha
     password: 123456789
   security:
     user.name: board-admin
