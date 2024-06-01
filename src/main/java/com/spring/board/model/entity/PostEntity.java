@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "post")
+@Table(name = "post", indexes = {@Index(name = "post_userid_idx", columnList = "userid")})
 @SQLDelete(sql = "UPDATE \"post\" SET deleteddatetime = CURRENT_TIMESTAMP WHERE postid = ?")
 // Deprecated in Hibernate 6.3
 // @Where(clause = "deletedDateTime IS NULL")
@@ -26,6 +26,10 @@ public class PostEntity {
     @Column private ZonedDateTime updatedDateTime;
 
     @Column private ZonedDateTime deletedDateTime;
+
+    @ManyToOne
+    @JoinColumn(name = "userid")
+    private UserEntity user;
 
     public PostEntity() {}
 
@@ -69,21 +73,25 @@ public class PostEntity {
         this.deletedDateTime = deletedDateTime;
     }
 
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PostEntity that)) return false;
-        return Objects.equals(getPostId(), that.getPostId())
-                && Objects.equals(getBody(), that.getBody())
-                && Objects.equals(getCreatedDateTime(), that.getCreatedDateTime())
-                && Objects.equals(getUpdatedDateTime(), that.getUpdatedDateTime())
-                && Objects.equals(getDeletedDateTime(), that.getDeletedDateTime());
+        if (o == null || getClass() != o.getClass()) return false;
+        PostEntity that = (PostEntity) o;
+        return Objects.equals(postId, that.postId) && Objects.equals(body, that.body) && Objects.equals(createdDateTime, that.createdDateTime) && Objects.equals(updatedDateTime, that.updatedDateTime) && Objects.equals(deletedDateTime, that.deletedDateTime) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                getPostId(), getBody(), getCreatedDateTime(), getUpdatedDateTime(), getDeletedDateTime());
+        return Objects.hash(postId, body, createdDateTime, updatedDateTime, deletedDateTime, user);
     }
 
     @PrePersist
