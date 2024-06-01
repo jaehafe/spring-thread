@@ -3,6 +3,7 @@ package com.spring.board.controller;
 import com.spring.board.model.user.User;
 import com.spring.board.model.user.UserSignUpRequestBody;
 import com.spring.board.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> signUp(@RequestBody UserSignUpRequestBody requestBody) {
+    public ResponseEntity<User> signUp(@Valid @RequestBody UserSignUpRequestBody requestBody) {
         var user = userService.signUp(requestBody.username(), requestBody.password());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

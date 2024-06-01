@@ -16,16 +16,4 @@ public class ClientErrorException extends RuntimeException{
     public HttpStatus getStatus() {
         return status;
     }
-
-    @RestControllerAdvice // rest api controller 전역에서 발생하는 예외를 처리하는 클래스
-    public static class GlobalExceptionHandler {
-
-        @ExceptionHandler(ClientErrorException.class)
-        public ResponseEntity<ClientErrorException> handleClientErrorException(ClientErrorException e) {
-            return new ResponseEntity<>(
-                    new ClientErrorException(e.getStatus(), e.getMessage()),
-                    e.getStatus()
-            );
-        }
-    }
 }

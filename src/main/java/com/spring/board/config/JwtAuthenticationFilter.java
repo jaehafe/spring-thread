@@ -1,6 +1,5 @@
 package com.spring.board.config;
 
-import com.spring.board.exception.jwt.JwtTokenNotFoundException;
 import com.spring.board.service.JwtService;
 import com.spring.board.service.UserService;
 import jakarta.servlet.FilterChain;
