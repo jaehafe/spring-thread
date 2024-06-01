@@ -28,6 +28,9 @@ public class PostEntity {
     @Column
     private Long repliesCount = 0L;
 
+    @Column
+    private Long likesCount = 0L;
+
     @Column private ZonedDateTime createdDateTime;
 
     @Column private ZonedDateTime updatedDateTime;
@@ -44,13 +47,13 @@ public class PostEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PostEntity that = (PostEntity) o;
-        return Objects.equals(postId, that.postId) && Objects.equals(body, that.body) && Objects.equals(createdDateTime, that.createdDateTime) && Objects.equals(updatedDateTime, that.updatedDateTime) && Objects.equals(deletedDateTime, that.deletedDateTime) && Objects.equals(user, that.user);
+        PostEntity post = (PostEntity) o;
+        return Objects.equals(postId, post.postId) && Objects.equals(body, post.body) && Objects.equals(repliesCount, post.repliesCount) && Objects.equals(likesCount, post.likesCount) && Objects.equals(createdDateTime, post.createdDateTime) && Objects.equals(updatedDateTime, post.updatedDateTime) && Objects.equals(deletedDateTime, post.deletedDateTime) && Objects.equals(user, post.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(postId, body, createdDateTime, updatedDateTime, deletedDateTime, user);
+        return Objects.hash(postId, body, repliesCount, likesCount, createdDateTime, updatedDateTime, deletedDateTime, user);
     }
 
     public static PostEntity of(String body, UserEntity user) {
