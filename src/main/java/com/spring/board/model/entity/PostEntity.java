@@ -94,6 +94,13 @@ public class PostEntity {
         return Objects.hash(postId, body, createdDateTime, updatedDateTime, deletedDateTime, user);
     }
 
+    public static PostEntity of(String body, UserEntity user) {
+        var post = new PostEntity();
+        post.setBody(body);
+        post.setUser(user);
+        return post;
+    }
+
     @PrePersist
     private void prePersist() {
         this.createdDateTime = ZonedDateTime.now();

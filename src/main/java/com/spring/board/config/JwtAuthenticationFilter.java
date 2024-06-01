@@ -32,15 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        // 검증로직
-
         String BEARER_PREFIX = "Bearer ";
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         SecurityContext securityContext = SecurityContextHolder.getContext();
-
-//        if(ObjectUtils.isEmpty(authorization) || !authorization.startsWith(BEARER_PREFIX)) {
-//            throw new JwtTokenNotFoundException();
-//        }
 
         if(!ObjectUtils.isEmpty(authorization)
                 && authorization.startsWith(BEARER_PREFIX)
