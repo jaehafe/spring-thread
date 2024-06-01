@@ -71,4 +71,34 @@ public class UserController {
         var response = userService.authenticate(userLoginRequestBody.username(), userLoginRequestBody.password());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/{username}/follows")
+    public ResponseEntity<User> follow(@PathVariable("username") String username, Authentication authentication) {
+
+        User user = userService.follow(username, (UserEntity) authentication.getPrincipal());
+        return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("/{username}/follows")
+    public ResponseEntity<User> unfollow(@PathVariable("username") String username, Authentication authentication) {
+
+        User user = userService.unFollow(username, (UserEntity) authentication.getPrincipal());
+        return ResponseEntity.ok(user);
+    }
+
+    // 팔로워 목록 조회
+    @GetMapping("/{username}/followers")
+    public ResponseEntity<List<User>> getFollowersByUser(@PathVariable("username") String username) {
+
+        List<User> followers = userService.getFollowersByUser(username);
+        return ResponseEntity.ok(followers);
+    }
+
+    // 팔로잉 목록 조회
+    @GetMapping("/{username}/followings")
+    public ResponseEntity<List<User>> getFollowingsByUser(@PathVariable("username") String username) {
+
+        List<User> followings = userService.getFollowingsByUser(username);
+        return ResponseEntity.ok(followings);
+    }
 }
