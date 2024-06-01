@@ -15,7 +15,9 @@ public record Post(
         User user,
         ZonedDateTime createdDateTime,
         ZonedDateTime updatedDateTime,
-        ZonedDateTime deletedDateTime) {
+        ZonedDateTime deletedDateTime,
+        Boolean isLiking
+) {
 
     public static Post from(PostEntity postEntity) {
         return new Post(
@@ -26,6 +28,21 @@ public record Post(
                 User.from(postEntity.getUser()),
                 postEntity.getCreatedDateTime(),
                 postEntity.getUpdatedDateTime(),
-                postEntity.getDeletedDateTime());
+                postEntity.getDeletedDateTime(),
+                null
+        );
+    }
+
+    public static Post from(PostEntity postEntity, Boolean isLiking) {
+        return new Post(
+                postEntity.getPostId(),
+                postEntity.getBody(),
+                postEntity.getRepliesCount(),
+                postEntity.getLikesCount(),
+                User.from(postEntity.getUser()),
+                postEntity.getCreatedDateTime(),
+                postEntity.getUpdatedDateTime(),
+                postEntity.getDeletedDateTime(),
+                isLiking);
     }
 }
