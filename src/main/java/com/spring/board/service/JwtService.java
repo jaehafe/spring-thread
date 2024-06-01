@@ -24,7 +24,7 @@ public class JwtService {
         return getSubject(accessToken);
     }
 
-    private String generateToken(String subject) {
+    public String generateToken(String subject) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + (1000 * 60 * 60 * 3));
 

@@ -4,6 +4,7 @@ import com.spring.board.exception.user.UserAlreadyExistsException;
 import com.spring.board.exception.user.UserNotFoundException;
 import com.spring.board.model.entity.UserEntity;
 import com.spring.board.model.user.User;
+import com.spring.board.model.user.UserAuthenticationResponse;
 import com.spring.board.repository.UserEntityRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,10 +17,12 @@ public class UserService implements UserDetailsService {
 
     private final UserEntityRepository userEntityRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public UserService(UserEntityRepository userEntityRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserEntityRepository userEntityRepository, BCryptPasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userEntityRepository = userEntityRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -41,5 +44,17 @@ public class UserService implements UserDetailsService {
         userEntityRepository.save(userEntity);
 
         return User.from(userEntity);
+    }
+
+    public UserAuthenticationResponse authenticate(String username, String password) {
+        var userEntity =
+                userEntityRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+
+        if (passwordEncoder.matches(password, userEntity.getPassword())) {
+            var accessToken = jwtService.generateAccessToken(userEntity);
+            return new UserAuthenticationResponse(accessToken);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 }

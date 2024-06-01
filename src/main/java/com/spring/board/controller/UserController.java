@@ -1,6 +1,8 @@
 package com.spring.board.controller;
 
 import com.spring.board.model.user.User;
+import com.spring.board.model.user.UserAuthenticationResponse;
+import com.spring.board.model.user.UserLoginRequestBody;
 import com.spring.board.model.user.UserSignUpRequestBody;
 import com.spring.board.service.UserService;
 import jakarta.validation.Valid;
@@ -23,7 +25,15 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> signUp(@Valid @RequestBody UserSignUpRequestBody requestBody) {
+
         var user = userService.signUp(requestBody.username(), requestBody.password());
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<UserAuthenticationResponse> authenticate(@Valid @RequestBody UserLoginRequestBody userLoginRequestBody) {
+
+        var response = userService.authenticate(userLoginRequestBody.username(), userLoginRequestBody.password());
+        return ResponseEntity.ok(response);
     }
 }
