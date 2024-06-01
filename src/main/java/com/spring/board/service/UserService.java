@@ -5,12 +5,15 @@ import com.spring.board.exception.user.UserNotFoundException;
 import com.spring.board.model.entity.UserEntity;
 import com.spring.board.model.user.User;
 import com.spring.board.model.user.UserAuthenticationResponse;
+import com.spring.board.model.user.UserPatchRequestBody;
 import com.spring.board.repository.UserEntityRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -56,5 +59,47 @@ public class UserService implements UserDetailsService {
         } else {
             throw new UserNotFoundException();
         }
+    }
+
+    public List<User> getUsers(String query) {
+
+        List<UserEntity> userEntities;
+
+        if(query != null && !query.isEmpty()) {
+            userEntities = userEntityRepository.findByUsernameContaining(query);
+        } else {
+            userEntities = userEntityRepository.findAll();
+        }
+
+        return userEntities.stream().map(User::from).toList();
+    }
+
+    public User getUser(String username) {
+        UserEntity userEntity = userEntityRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+
+        return User.from(userEntity);
+    }
+
+    public User updateUser(
+            String username,
+            UserPatchRequestBody requestBody,
+            UserEntity currentUser
+    ) {
+
+        UserEntity userEntity = userEntityRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+
+        if(!userEntity.equals(currentUser)) {
+            throw new UserNotFoundException(username);
+        }
+
+        if(requestBody.description() != null) {
+            userEntity.setDescription(requestBody.description());
+        }
+
+        return User.from(userEntityRepository.save(userEntity));
     }
 }
