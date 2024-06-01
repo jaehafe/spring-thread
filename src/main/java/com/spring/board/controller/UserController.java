@@ -86,19 +86,15 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    // 팔로워 목록 조회
     @GetMapping("/{username}/followers")
     public ResponseEntity<List<User>> getFollowersByUser(@PathVariable("username") String username) {
-
-        List<User> followers = userService.getFollowersByUser(username);
-        return ResponseEntity.ok(followers);
+        var followers = userService.getFollowersByUsername(username);
+        return new ResponseEntity<>(followers, HttpStatus.OK);
     }
 
-    // 팔로잉 목록 조회
     @GetMapping("/{username}/followings")
     public ResponseEntity<List<User>> getFollowingsByUser(@PathVariable("username") String username) {
-
-        List<User> followings = userService.getFollowingsByUser(username);
-        return ResponseEntity.ok(followings);
+        var followings = userService.getFollowingsByUsername(username);
+        return new ResponseEntity<>(followings, HttpStatus.OK);
     }
 }

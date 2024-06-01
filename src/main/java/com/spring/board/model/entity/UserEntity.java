@@ -14,30 +14,28 @@ import java.util.Objects;
 import java.util.Random;
 
 @Entity
-@Table(name = "\"user\"", indexes = {@Index(name = "user_username_idx", columnList = "username", unique = true)})
+@Table(
+        name = "\"user\"",
+        indexes = {@Index(name = "user_username_idx", columnList = "username", unique = true)})
 @SQLDelete(sql = "UPDATE \"user\" SET deletedDateTime = CURRENT_TIMESTAMP WHERE userId = ?")
 @SQLRestriction("deletedDateTime IS NULL")
-@Getter
-@Setter
 public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false)
-    private String username;
+    @Column private String username;
 
-    @Column(nullable = false)
-    private String password;
+    @Column private String password;
 
     @Column private String profile;
 
     @Column private String description;
 
-    @Column private Long followerCount = 0L;
+    @Column private Long followersCount = 0L;
 
-    @Column private Long followingCount = 0L;
+    @Column private Long followingsCount = 0L;
 
     @Column private ZonedDateTime createdDateTime;
 
@@ -47,7 +45,77 @@ public class UserEntity implements UserDetails {
 
     public UserEntity() {}
 
+    public Long getUserId() {
+        return userId;
+    }
 
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ZonedDateTime getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(ZonedDateTime createdDateTime) {
+        this.createdDateTime = createdDateTime;
+    }
+
+    public ZonedDateTime getUpdatedDateTime() {
+        return updatedDateTime;
+    }
+
+    public void setUpdatedDateTime(ZonedDateTime updatedDateTime) {
+        this.updatedDateTime = updatedDateTime;
+    }
+
+    public ZonedDateTime getDeletedDateTime() {
+        return deletedDateTime;
+    }
+
+    public void setDeletedDateTime(ZonedDateTime deletedDateTime) {
+        this.deletedDateTime = deletedDateTime;
+    }
+
+    public Long getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(Long followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public Long getFollowingsCount() {
+        return followingsCount;
+    }
+
+    public void setFollowingsCount(Long followingsCount) {
+        this.followingsCount = followingsCount;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,27 +152,45 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
-    public static UserEntity of(String username, String password) {
-        var userEntity = new UserEntity();
-        userEntity.setUsername(username);
-        userEntity.setPassword(password);
-        // Set random profile image url
-        userEntity.setProfile("https://avatar.iran.liara.run/public/" + new Random().nextInt(100));
-
-        return userEntity;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(profile, that.profile) && Objects.equals(description, that.description) && Objects.equals(followerCount, that.followerCount) && Objects.equals(followingCount, that.followingCount) && Objects.equals(createdDateTime, that.createdDateTime) && Objects.equals(updatedDateTime, that.updatedDateTime) && Objects.equals(deletedDateTime, that.deletedDateTime);
+        if (!(o instanceof UserEntity user)) return false;
+        return Objects.equals(getUserId(), user.getUserId())
+                && Objects.equals(getUsername(), user.getUsername())
+                && Objects.equals(getPassword(), user.getPassword())
+                && Objects.equals(getProfile(), user.getProfile())
+                && Objects.equals(getDescription(), user.getDescription())
+                && Objects.equals(getFollowersCount(), user.getFollowersCount())
+                && Objects.equals(getFollowingsCount(), user.getFollowingsCount())
+                && Objects.equals(getCreatedDateTime(), user.getCreatedDateTime())
+                && Objects.equals(getUpdatedDateTime(), user.getUpdatedDateTime())
+                && Objects.equals(getDeletedDateTime(), user.getDeletedDateTime());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username, password, profile, description, followerCount, followingCount, createdDateTime, updatedDateTime, deletedDateTime);
+        return Objects.hash(
+                getUserId(),
+                getUsername(),
+                getPassword(),
+                getProfile(),
+                getDescription(),
+                getFollowersCount(),
+                getFollowingsCount(),
+                getCreatedDateTime(),
+                getUpdatedDateTime(),
+                getDeletedDateTime());
+    }
+
+    public static UserEntity of(String username, String password) {
+        var userEntity = new UserEntity();
+        userEntity.setUsername(username);
+        userEntity.setPassword(password);
+
+        // Set random profile image url
+        userEntity.setProfile("https://avatar.iran.liara.run/public/" + new Random().nextInt(100));
+        return userEntity;
     }
 
     @PrePersist

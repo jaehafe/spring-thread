@@ -9,16 +9,12 @@ import java.util.Objects;
 
 @Entity
 @Table(
-        name = "\"follow\"",
-        indexes = {@Index(name = "follow_follower_following_idx", columnList = "follower, following", unique = true)})
-@Getter
-@Setter
+        name = "follow",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"follower", "following"})})
 public class FollowEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long followId;
-
-    @Column private ZonedDateTime createdDateTime;
 
     @ManyToOne
     @JoinColumn(name = "follower")
@@ -28,25 +24,62 @@ public class FollowEntity {
     @JoinColumn(name = "following")
     private UserEntity following;
 
-    @Override
-    public boolean equals(Object o) {
+    @Column private ZonedDateTime createdDateTime;
 
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FollowEntity that = (FollowEntity) o;
-        return Objects.equals(followId, that.followId) && Objects.equals(createdDateTime, that.createdDateTime) && Objects.equals(follower, that.follower) && Objects.equals(following, that.following);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(followId, createdDateTime, follower, following);
-    }
+    public FollowEntity() {}
 
     public static FollowEntity of(UserEntity follower, UserEntity following) {
         FollowEntity follow = new FollowEntity();
         follow.setFollower(follower);
         follow.setFollowing(following);
         return follow;
+    }
+
+    public Long getFollowId() {
+        return followId;
+    }
+
+    public void setFollowId(Long followId) {
+        this.followId = followId;
+    }
+
+    public UserEntity getFollower() {
+        return follower;
+    }
+
+    public void setFollower(UserEntity follower) {
+        this.follower = follower;
+    }
+
+    public UserEntity getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(UserEntity following) {
+        this.following = following;
+    }
+
+    public ZonedDateTime getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(ZonedDateTime createdDateTime) {
+        this.createdDateTime = createdDateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FollowEntity that)) return false;
+        return Objects.equals(getFollowId(), that.getFollowId())
+                && Objects.equals(getFollower(), that.getFollower())
+                && Objects.equals(getFollowing(), that.getFollowing())
+                && Objects.equals(getCreatedDateTime(), that.getCreatedDateTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFollowId(), getFollower(), getFollowing(), getCreatedDateTime());
     }
 
     @PrePersist
