@@ -4,7 +4,10 @@ import com.spring.board.model.entity.UserEntity;
 import com.spring.board.model.post.Post;
 import com.spring.board.model.post.PostPatchRequestBody;
 import com.spring.board.model.post.PostPostRequestBody;
+import com.spring.board.model.user.LikedUser;
+import com.spring.board.model.user.User;
 import com.spring.board.service.PostService;
+import com.spring.board.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +21,12 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, UserService userService) {
         this.postService = postService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -40,6 +45,14 @@ public class PostController {
 
         Post post = postService.getPostByPostId(postId, (UserEntity) authentication.getPrincipal());
         return ResponseEntity.ok(post);
+    }
+
+    @GetMapping("/{postId}/liked-users")
+    public ResponseEntity<List<LikedUser>> getLikedUsersByPostId(@PathVariable("postId") Long postId, Authentication authentication) {
+
+        List<LikedUser> likedUsers = userService.getLikedUsersByPostId(postId, (UserEntity) authentication.getPrincipal());
+
+        return ResponseEntity.ok(likedUsers);
     }
 
     @PostMapping

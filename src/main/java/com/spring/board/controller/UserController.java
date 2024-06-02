@@ -2,8 +2,10 @@ package com.spring.board.controller;
 
 import com.spring.board.model.entity.UserEntity;
 import com.spring.board.model.post.Post;
+import com.spring.board.model.reply.Reply;
 import com.spring.board.model.user.*;
 import com.spring.board.service.PostService;
+import com.spring.board.service.ReplyService;
 import com.spring.board.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,12 @@ public class UserController {
 
     private final UserService userService;
     private final PostService postService;
+    private final ReplyService replyService;
 
-    public UserController(UserService userService, PostService postService) {
+    public UserController(UserService userService, PostService postService, ReplyService replyService) {
         this.userService = userService;
         this.postService = postService;
+        this.replyService = replyService;
     }
 
     @GetMapping
@@ -87,7 +91,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}/followers")
-    public ResponseEntity<List<User>> getFollowersByUser(@PathVariable("username") String username, Authentication authentication) {
+    public ResponseEntity<List<Follower>> getFollowersByUser(@PathVariable("username") String username, Authentication authentication) {
         var followers = userService.getFollowersByUsername(username, (UserEntity) authentication.getPrincipal());
         return new ResponseEntity<>(followers, HttpStatus.OK);
     }
@@ -96,5 +100,17 @@ public class UserController {
     public ResponseEntity<List<User>> getFollowingsByUser(@PathVariable("username") String username, Authentication authentication) {
         var followings = userService.getFollowingsByUsername(username, (UserEntity) authentication.getPrincipal());
         return new ResponseEntity<>(followings, HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}/liked-users")
+    public ResponseEntity<List<LikedUser>> getLikedUsersByUser(@PathVariable("username") String username, Authentication authentication) {
+        var likedUsers = userService.getLikedUsersByUser(username, (UserEntity) authentication.getPrincipal());
+        return ResponseEntity.ok(likedUsers);
+    }
+
+    @GetMapping("/{username}/replies")
+    public ResponseEntity<List<Reply>> getRepliesByUser(@PathVariable("username") String username) {
+        List<Reply> replies = replyService.getRepliesByUser(username);
+        return ResponseEntity.ok(replies);
     }
 }
