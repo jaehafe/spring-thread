@@ -5,11 +5,11 @@ import com.spring.board.model.post.Post;
 import com.spring.board.model.post.PostPatchRequestBody;
 import com.spring.board.model.post.PostPostRequestBody;
 import com.spring.board.model.user.LikedUser;
-import com.spring.board.model.user.User;
 import com.spring.board.service.PostService;
 import com.spring.board.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +30,11 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getPosts(Authentication authentication) {
+    public ResponseEntity<List<Post>> getPosts(Pageable pageable, Authentication authentication) {
 
         logger.info("GET /api/v1/posts");
 
-        List<Post> posts = postService.getPosts((UserEntity) authentication.getPrincipal());
+        List<Post> posts = postService.getPosts(pageable, (UserEntity) authentication.getPrincipal());
         return ResponseEntity.ok(posts);
     }
 

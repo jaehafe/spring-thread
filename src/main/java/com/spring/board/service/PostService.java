@@ -13,6 +13,8 @@ import com.spring.board.repository.LikeEntityRepository;
 import com.spring.board.repository.PostEntityRepository;
 import com.spring.board.repository.UserEntityRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,8 +32,8 @@ public class PostService {
         this.likeEntityRepository = likeEntityRepository;
     }
 
-    public List<Post> getPosts(UserEntity currentUser) {
-        List<PostEntity> postEntities = postEntityRepository.findAll();
+    public List<Post> getPosts(Pageable pageable, UserEntity currentUser) {
+        Page<PostEntity> postEntities = postEntityRepository.findAll(pageable);
         return postEntities.stream()
                 .map(postEntity -> getPostWithLikingStatus(postEntity, currentUser))
                 .toList();
