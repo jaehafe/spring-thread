@@ -24,6 +24,9 @@ logging:
     # TRACE < DEBUG < INFO < WARN < ERROR
     root: INFO
 
+jwt:
+  secret-key: thisisthesecretkeyaskwzXSKSKLDJkaskldjWjjwjqjk12=
+
 #  logging:
 #    level:
 #      org.hibernate.type: TRACE
